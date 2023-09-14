@@ -1,3 +1,7 @@
+<?php 
+    require_once 'pessoa.php';
+    $pessoa = new Pessoa("crudpdo", "localhost","root", "");
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,12 +32,25 @@
                     <td>Telefone</td>
                     <td colspan="2">E-mail</td>
                 </tr>
-                <tr>
-                    <td>MARIA</td>
-                    <td>4146564565</td>
-                    <td>maria@mail.com</td>
-                    <td><a href="#">Editar</a><a href="#">Excluir</a></td>
-                </tr>
+            <?php 
+                $dados = $pessoa->buscarDados(); //retornando os dados vindos do banco
+                $tamanhoDados = count($dados);
+                if( $tamanhoDados > 0) {
+                    for ($i=0; $i < $tamanhoDados; $i++) { //entrando na tabela e percorrendo as linhas
+                        echo "<tr>";
+                        foreach ($dados[$i] as $coluna => $valor) { //percorrendo as colunas da tabela
+                            if ($coluna !== "ID") {
+                                echo "<td>" . $valor . "</td>";
+                            }
+                        }
+            ?>
+                        <td><a href="#">Editar</a><a href="#">Excluir</a></td>
+                        
+                        <?php
+                        echo "</tr>";
+                    }
+                }
+            ?>
             </table>
         </section>
     </main>
