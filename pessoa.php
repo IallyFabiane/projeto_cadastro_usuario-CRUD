@@ -21,5 +21,20 @@
             return $cmd;
         }
 
+        public function cadastrarPessoa($nome, $telefone, $email) {
+                $res = $this->pdo->prepare("SELECT id FROM pessoa WHERE email = :e");
+                $res->bindValue(":e", $email);
+                $res->execute();
+                if ($res->rowCount() > 0) { //se for maior que 0 é porque o e-mail já existe no banco de dados
+                    return false;
+                } else { //email não foi encontrado
+                    $res = $this->pdo->prepare("INSERT INTO pessoa(nome, telefone, email) VALUES (:n, :t, :e)");
+                    $res->bindValue(":n", $nome);
+                    $res->bindValue(":t", $telefone);
+                    $res->bindValue(":e", $email);
+                    $res->execute();
+                    return true;
+                }
+        }
     }
 ?>

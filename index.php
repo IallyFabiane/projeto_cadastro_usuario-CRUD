@@ -12,9 +12,24 @@
     <link rel="shortcut icon" href="bx-table.svg" type="image/x-icon">
 </head>
 <body>
+    <?php 
+    //pegando os dados do formulário
+        if (isset($_POST['btn-cadastrar'])){ //testando se o botãocadastrar foi clkicado
+            $nome = addslashes($_POST['nome']); //proteção contra códigos maliciosos com o addslashes
+            $telefone = addslashes($_POST['telefone']);
+            $email = addslashes($_POST['email']);
+            if (!empty($nome) && !empty($telefone) && !empty($email)) {
+                if(!$pessoa->cadastrarPessoa($nome, $telefone, $email)) {
+                    echo "E-mail já cadastrado";
+                }
+            } else {
+                echo "Preencha todos os campos";
+            }
+        }
+    ?>
     <main>
         <section id="esquerda">
-            <form action="">
+            <form action="" method="post">
                 <h2>Cadastrar Pessoa</h2>
                 <label for="nome">Nome</label>
                 <input type="text" name="nome" id="nome" >
@@ -22,7 +37,7 @@
                 <input type="tel" name="telefone" id="telefone">
                 <label for="email">Email</label>
                 <input type="text" name="email" id="email">
-                <button type="submit">Cadastrar</button>
+                <button name="btn-cadastrar" type="submit">Cadastrar</button>
             </form>
         </section>
         <section id="direita">
@@ -49,6 +64,8 @@
                         <?php
                         echo "</tr>";
                     }
+                } else {
+                    echo "Ainda não há pesssoas cadastradas";
                 }
             ?>
             </table>
