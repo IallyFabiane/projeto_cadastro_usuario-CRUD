@@ -16,16 +16,34 @@
 <body>
     <?php 
     //pegando os dados do formulário
-        if (isset($_POST['btn-cadastrar'])){ //testando se o botãocadastrar foi clkicado
-            $nome = addslashes($_POST['nome']); //proteção contra códigos maliciosos com o addslashes
-            $telefone = addslashes($_POST['telefone']);
-            $email = addslashes($_POST['email']);
-            if (!empty($nome) && !empty($telefone) && !empty($email)) {
-                if(!$pessoa->cadastrarPessoa($nome, $telefone, $email)) {
-                    echo "E-mail já cadastrado";
+        if (isset($_POST['btn-cadastrar'])){ //testando se o botão cadastrar foi clicado
+           
+            //editar
+            if(isset($_GET['id_update']) && !empty($_GET['id_update'])) {
+                $id_update = addslashes($_GET['id_update']);
+                $nome = addslashes($_POST['nome']); //proteção contra códigos maliciosos com o addslashes
+                $telefone = addslashes($_POST['telefone']);
+                $email = addslashes($_POST['email']);
+                if (!empty($nome) && !empty($telefone) && !empty($email)) {
+                    if(!$pessoa->atualizarDados($id_update, $nome, $telefone, $email)) {
+                        echo "<h4>E-mail já cadastrado!</h4>";
+                    }
+                } else {
+                    echo "<h4>Preencha todos os campos.</h4>";
                 }
-            } else {
-                echo "Preencha todos os campos";
+            } //cadastrar
+             else {
+                $nome = addslashes($_POST['nome']); //proteção contra códigos maliciosos com o addslashes
+                $telefone = addslashes($_POST['telefone']);
+                $email = addslashes($_POST['email']);
+                if (!empty($nome) && !empty($telefone) && !empty($email)) {
+                    if(!$pessoa->cadastrarPessoa($nome, $telefone, $email)) {
+                        echo "<h4>E-mail já cadastrado!</h4>";
+                    }
+                } else {
+                    echo "<h4>Preencha todos os campos.</h4>";
+    
+                }
             }
         }
 
@@ -36,7 +54,6 @@
             header("location: index.php"); //atualizando a página
         }
 
-       
        if(isset($_GET['id_update'])){
         $id_update = $_GET['id_update'];
         $id_update = addslashes($id_update);
@@ -47,7 +64,7 @@
     <main>
         <section id="esquerda">
             <form action="" method="post">
-                <h2><?php echo isset($cmd) ? "Editar Pessoa" : "Atualizar Pessoa"; ?></h2>
+                <h2><?php echo isset($cmd) ? "Editar Pessoa" : "Cadastrar Pessoa"; ?></h2>
                 <label for="nome">Nome</label>
                 <input type="text" name="nome" id="nome" value="<?php if(isset($cmd)) { echo htmlspecialchars($cmd['NOME']); } ?>">
                 <label for="telefone">Telefone</label>
@@ -84,7 +101,9 @@
                         echo "</tr>";
                     }
                 } else {
-                    echo "Ainda não há pesssoas cadastradas";
+                    echo "<div class='aviso'>";
+                    echo "<h4>Ainda não há pesssoas cadastradas.</h4>";
+                    echo "</div>";
                 }
             ?>
             </table>

@@ -61,8 +61,22 @@
 
         //Atualizar Dados no Banco de Dados
 
-        public function atualizarDados() {
-
+        public function atualizarDados($id, $nome, $telefone, $email) {
+            $res = $this->pdo->prepare("SELECT id FROM pessoa WHERE email = :e");
+            $res->bindValue(":e", $email);
+            $res->execute();
+            if ($res->rowCount() > 0) { //se for maior que 0 é porque o e-mail já existe no banco de dados
+                return false;
+            } else {
+                $res = $this->pdo->prepare("UPDATE pessoa SET NOME = :n, TELEFONE = :t, EMAIL = :e WHERE ID = :id");
+                $res->bindValue(":id", $id);
+                $res->bindValue(":n", $nome);
+                $res->bindValue(":t", $telefone);
+                $res->bindValue(":e", $email);
+                $res->execute();
+                header("location: index.php");
+                return true;
+            }
         }
     }
 ?>
