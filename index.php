@@ -26,6 +26,13 @@
                 echo "Preencha todos os campos";
             }
         }
+
+        $id_pessoa = $_GET['id'];
+        if (isset($id_pessoa)) {
+            $id_pessoa = addslashes($id_pessoa);
+            $pessoa->excluirPessoa($id_pessoa);
+            header("location: index.php"); //atualizando a página
+        }
     ?>
     <main>
         <section id="esquerda">
@@ -59,8 +66,10 @@
                             }
                         }
             ?>
-                        <td><a href="#">Editar</a><a href="#">Excluir</a></td>
-                        
+                        <td>
+                            <a href="">Editar</a>
+                            <a href="index.php?id=<?= $dados[$i]['ID']?>">Excluir</a>
+                        </td>
                         <?php
                         echo "</tr>";
                     }
