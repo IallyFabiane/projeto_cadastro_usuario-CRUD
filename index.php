@@ -4,6 +4,7 @@
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="bx-table.svg" type="image/x-icon">
 </head>
+
 <body>
     <?php 
     //pegando os dados do formulário
@@ -27,24 +29,32 @@
             }
         }
 
-        $id_pessoa = $_GET['id'];
-        if (isset($id_pessoa)) {
+        if (isset($_GET['id'])) {
+            $id_pessoa = $_GET['id'];
             $id_pessoa = addslashes($id_pessoa);
             $pessoa->excluirPessoa($id_pessoa);
             header("location: index.php"); //atualizando a página
         }
+
+       
+       if(isset($_GET['id_update'])){
+        $id_update = $_GET['id_update'];
+        $id_update = addslashes($id_update);
+        $cmd = $pessoa->buscarDadosPessoa($id_update);
+       }
+        
     ?>
     <main>
         <section id="esquerda">
             <form action="" method="post">
-                <h2>Cadastrar Pessoa</h2>
+                <h2><?php echo isset($cmd) ? "Editar Pessoa" : "Atualizar Pessoa"; ?></h2>
                 <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" >
+                <input type="text" name="nome" id="nome" value="<?php if(isset($cmd)) { echo htmlspecialchars($cmd['NOME']); } ?>">
                 <label for="telefone">Telefone</label>
-                <input type="tel" name="telefone" id="telefone">
+                <input type="tel" name="telefone" id="telefone" value="<?php if(isset($cmd)) { echo htmlspecialchars($cmd['TELEFONE']); } ?>">
                 <label for="email">Email</label>
-                <input type="text" name="email" id="email">
-                <button name="btn-cadastrar" type="submit">Cadastrar</button>
+                <input type="text" name="email" id="email" value="<?php if(isset($cmd)) { echo htmlspecialchars($cmd['EMAIL']); } ?>">
+                <button name="btn-cadastrar" type="submit"><?php if(isset($cmd)) { echo "Atualizar"; } else { echo "Cadastrar"; } ;?></button>
             </form>
         </section>
         <section id="direita">
@@ -54,7 +64,7 @@
                     <td>Telefone</td>
                     <td colspan="2">E-mail</td>
                 </tr>
-            <?php 
+                <?php 
                 $dados = $pessoa->buscarDados(); //retornando os dados vindos do banco
                 $tamanhoDados = count($dados);
                 if( $tamanhoDados > 0) {
@@ -66,11 +76,11 @@
                             }
                         }
             ?>
-                        <td>
-                            <a href="">Editar</a>
-                            <a href="index.php?id=<?= $dados[$i]['ID']?>">Excluir</a>
-                        </td>
-                        <?php
+                <td>
+                    <a href="index.php?id_update=<?= $dados[$i]['ID']?>">Editar</a>
+                    <a href="index.php?id=<?= $dados[$i]['ID']?>">Excluir</a>
+                </td>
+                <?php
                         echo "</tr>";
                     }
                 } else {
@@ -81,4 +91,5 @@
         </section>
     </main>
 </body>
+
 </html>

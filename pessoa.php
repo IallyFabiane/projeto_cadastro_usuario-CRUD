@@ -42,5 +42,27 @@
             $res->bindValue(":id", $id);
             $res->execute();
         }
+
+        //Buscar Dados de uma Pessoa Específica
+
+        public function buscarDadosPessoa($id) {
+            try {
+                $res = $this->pdo->prepare("SELECT * FROM pessoa WHERE ID = :id");
+                $res->bindValue(":id", $id);
+                $res->execute();
+                return $res->fetch(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                // Exibir mensagens de erro ou registrar em log, se necessário
+                echo "Erro na consulta: " . $e->getMessage();
+                return array(); // Retornar um array vazio em caso de erro
+            }
+        }
+        
+
+        //Atualizar Dados no Banco de Dados
+
+        public function atualizarDados() {
+
+        }
     }
 ?>
